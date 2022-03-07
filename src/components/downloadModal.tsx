@@ -153,6 +153,9 @@ export const DownloadModal: React.FC<{
                 setSelected={setSelectedOs}
                 candidates={["Windows", "Mac", "Linux"]}
               />
+               <p className="has-text-centered is-size-7">
+                ※Mac版はmacOS Catalina以降のサポート。また、Apple SiliconシリーズMacはRosetta 2が必要です。
+              </p>
 
               <hr className="my-3" />
 
