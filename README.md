@@ -1,35 +1,73 @@
 # VOICEVOX BLOG
 
+VOICEVOX の公式サイトのリポジトリです。  
 https://voicevox.hiroshiba.jp/
 
-## add resource
+## 環境構築
+
+Node v14.17.4、npm v6.14.14 を用いて開発されています。
 
 ```bash
-resource_url="https://raw.githubusercontent.com/VOICEVOX/voicevox_resource"
-tag="0.9.2"
-
-# 規約
-curl -s "$resource_url/$tag/editor/README.md" > src/markdowns/softwareReadme.md
-curl -s "$resource_url/$tag/character_info/01_metan/policy.md" > src/markdowns/libraryReadmeTohoku.md
-curl -s "$resource_url/$tag/character_info/03_tsumugi/policy.md" > src/markdowns/libraryReadmeTsumugi.md
-curl -s "$resource_url/$tag/character_info/05_ritsu/policy.md" > src/markdowns/libraryReadmeRitsu.md
-
-# 使い方
-editor_url="https://raw.githubusercontent.com/VOICEVOX/voicevox"
-curl -s "$editor_url/$tag/public/howtouse.md" > src/markdowns/howToUse.md
-sed -r 's|src="([^"]+?)"|src="'$editor_url/$tag'/public/\1"|g' -i src/markdowns/howToUse.md
+npm ci
 ```
 
-## debug
+## ローカル環境でチェック
 
 ```bash
 npm run develop
+```
+
+もしくは
+
+```bash
+npm run build && npm run serve
 ```
 
 ## deploy
 
 ```bash
 npm run clean && npm run deploy
+```
+
+## add resource
+
+```bash
+editor_tag="0.11.2"
+editor_url="https://raw.githubusercontent.com/VOICEVOX/voicevox/$editor_tag"
+
+resource_tag="0.11.0"
+resource_url="https://raw.githubusercontent.com/VOICEVOX/voicevox_resource/$resource_tag"
+
+# 規約
+curl -s "$resource_url/editor/README.md" > src/markdowns/softwareReadme.md
+
+# 使い方
+curl -s "$editor_url/public/howtouse.md" > src/markdowns/howToUse.md
+sed -r 's|src="([^"]+?)"|src="'$editor_url'/public/\1"|g' -i src/markdowns/howToUse.md
+
+# Q&A
+curl -s "$editor_url/public/qAndA.md" > src/markdowns/qAndA.md
+
+# 変更履歴
+curl -s "$editor_url/public/updateInfos.json" > src/data/updateInfos.json
+```
+
+## 音量に関して
+
+ffmpeg で音量を調べて、だいたい LUFS 値が -20~-23 になるように調整しています。
+
+```bash
+# 音量を調べる
+audio_file=audio.wav
+ffmpeg -nostats -i $audio_file -filter_complex ebur128 -f null - </dev/null 2>&1 |
+  grep -3 "Integrated loudness:" |
+  grep "I:" |
+  tail -n1
+
+# 音量を調整する（例えば -17 LUFS を -20 LUFS くらいにしたい場合は volume=-3dB にする）
+audio_file=audio.wav
+output_file=output.wav
+ffmpeg -i $audio_file -af volume=-3dB $output_file
 ```
 
 ## LICENSE

@@ -1,38 +1,57 @@
-import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql, Link, useStaticQuery } from "gatsby"
 import { IGatsbyImageData, StaticImage } from "gatsby-plugin-image"
-import React, { useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
+import hau01 from "../audios/dormitory/hau-01.wav"
+import hau02 from "../audios/dormitory/hau-02.wav"
+import hau03 from "../audios/dormitory/hau-03.wav"
+import hau04 from "../audios/dormitory/hau-04.wav"
+import himari01 from "../audios/dormitory/himari-01.wav"
+import himari02 from "../audios/dormitory/himari-02.wav"
+import himari03 from "../audios/dormitory/himari-03.wav"
+import himari04 from "../audios/dormitory/himari-04.wav"
+import himari05 from "../audios/dormitory/himari-05.wav"
+import kotarou01 from "../audios/dormitory/kotarou-01.wav"
+import kotarou02 from "../audios/dormitory/kotarou-02.wav"
+import kotarou03 from "../audios/dormitory/kotarou-03.wav"
+import metan01 from "../audios/dormitory/metan-01.wav"
+import metan02 from "../audios/dormitory/metan-02.wav"
+import metan03 from "../audios/dormitory/metan-03.wav"
+import metan04 from "../audios/dormitory/metan-04.wav"
+import ritsu01 from "../audios/dormitory/ritsu-01.wav"
+import ritsu02 from "../audios/dormitory/ritsu-02.wav"
+import ritsu03 from "../audios/dormitory/ritsu-03.wav"
+import ritsu04 from "../audios/dormitory/ritsu-04.wav"
+import ritsu05 from "../audios/dormitory/ritsu-05.wav"
+import ryusei01 from "../audios/dormitory/ryusei-01.wav"
+import ryusei02 from "../audios/dormitory/ryusei-02.wav"
+import ryusei03 from "../audios/dormitory/ryusei-03.wav"
+import takehiro01 from "../audios/dormitory/takehiro-01.wav"
+import takehiro02 from "../audios/dormitory/takehiro-02.wav"
+import takehiro03 from "../audios/dormitory/takehiro-03.wav"
+import tsumugi01 from "../audios/dormitory/tsumugi-01.wav"
+import tsumugi02 from "../audios/dormitory/tsumugi-02.wav"
+import tsumugi03 from "../audios/dormitory/tsumugi-03.wav"
+import tsumugi04 from "../audios/dormitory/tsumugi-04.wav"
+import zundamon01 from "../audios/dormitory/zundamon-01.wav"
+import zundamon02 from "../audios/dormitory/zundamon-02.wav"
+import zundamon03 from "../audios/dormitory/zundamon-03.wav"
+import zundamon04 from "../audios/dormitory/zundamon-04.wav"
 import DormitoryCharacterCard from "../components/dormitoryCharacterCard"
 import DormitoryCharacterModal from "../components/dormitoryCharacterModal"
 import "../components/layout.scss"
+import { Page } from "../components/page"
 import Seo from "../components/seo"
-import { CharacterInfo, CharacterKey } from "../types/dormitoryCharacter"
+import { CharacterContext } from "../contexts/context"
+import {
+  CharacterInfo,
+  CharacterKey,
+  Generation,
+} from "../types/dormitoryCharacter"
 
-import metan001 from "../audios/dormitory/metan-01.wav"
-import metan002 from "../audios/dormitory/metan-02.wav"
-import metan003 from "../audios/dormitory/metan-03.wav"
-import metan004 from "../audios/dormitory/metan-04.wav"
-import zundamon001 from "../audios/dormitory/zundamon-01.wav"
-import zundamon002 from "../audios/dormitory/zundamon-02.wav"
-import zundamon003 from "../audios/dormitory/zundamon-03.wav"
-import zundamon004 from "../audios/dormitory/zundamon-04.wav"
-import tsumugi001 from "../audios/dormitory/tsumugi-01.wav"
-import tsumugi002 from "../audios/dormitory/tsumugi-02.wav"
-import tsumugi003 from "../audios/dormitory/tsumugi-03.wav"
-import tsumugi004 from "../audios/dormitory/tsumugi-04.wav"
-import hau001 from "../audios/dormitory/hau-01.wav"
-import hau002 from "../audios/dormitory/hau-02.wav"
-import hau003 from "../audios/dormitory/hau-03.wav"
-import hau004 from "../audios/dormitory/hau-04.wav"
-import ritsu001 from "../audios/dormitory/ritsu-01.wav"
-import ritsu002 from "../audios/dormitory/ritsu-02.wav"
-import ritsu003 from "../audios/dormitory/ritsu-03.wav"
-import ritsu004 from "../audios/dormitory/ritsu-04.wav"
-import ritsu005 from "../audios/dormitory/ritsu-05.wav"
-
-export default () => {
-  const queryPortraits: {
+const Dormitory: React.FC<{ setShowingHeader: (show: boolean) => void }> = ({
+  setShowingHeader,
+}) => {
+  const query: {
     [key: string]: {
       nodes: {
         name: string
@@ -70,13 +89,7 @@ export default () => {
     }
   `)
 
-  const characterKeys: CharacterKey[] = [
-    "四国めたん",
-    "ずんだもん",
-    "春日部つむぎ",
-    "雨晴はう",
-    "波音リツ",
-  ]
+  const { characterKeys } = useContext(CharacterContext)
 
   const characterInfos: {
     [key in CharacterKey]: CharacterInfo
@@ -84,10 +97,10 @@ export default () => {
     四国めたん: {
       name: "四国めたん",
       rubyName: "四国<rp>(</rp><rt>しこく</rt><rp>)</rp>めたん",
-      bustupImage: queryPortraits.bustup.nodes.find(
+      bustupImage: query.bustup.nodes.find(
         node => node.name === "bustup-metan"
       )!.childImageSharp.gatsbyImageData,
-      portraitImage: queryPortraits.portrait.nodes.find(
+      portraitImage: query.portrait.nodes.find(
         node => node.name === "portrait-metan"
       )!.childImageSharp.gatsbyImageData,
       color: "#DF4C94",
@@ -99,19 +112,22 @@ export default () => {
         { label: "身長", value: "150 cm", size: 1 },
         { label: "性格", value: "若干ツンデレ気味", size: 2 },
       ],
-      voiceUrls: [metan001, metan002, metan003, metan004],
-      infoImages: queryPortraits.dormitory.nodes
+      voiceUrls: [metan01, metan02, metan03, metan04],
+      infoImages: query.dormitory.nodes
         .filter(node => node.name.includes("metan"))
         .sort((a, b) => a.name.localeCompare(b.name))
         .map(node => node.childImageSharp.gatsbyImageData),
       callNames: {
-        四国めたん: undefined,
         ずんだもん: "ずんだもん",
         春日部つむぎ: "つむぎさん",
         雨晴はう: "はうさん",
         波音リツ: "リツさん",
-        me: "わたくし",
-        you: "貴女(たち)<br />アンタ(ら)",
+        玄野武宏: "玄野さん",
+        白上虎太郎: "白上さん",
+        青山龍星: "青山さん",
+        冥鳴ひまり: "ひまりさん",
+        me: ["わたくし"],
+        you: ["貴女(たち)", "アンタ(ら)"],
       },
       detailUrl:
         "https://zunko.jp/con_voice.html#:~:text=%E3%81%AF%E3%81%93%E3%81%A1%E3%82%89%5Bsm31250786%5D-,%E5%9B%9B%E5%9B%BD%E3%82%81%E3%81%9F%E3%82%93%EF%BC%88%E6%BC%86%E9%BB%92%E3%81%AE%E3%82%81%E3%81%9F%E3%82%93%EF%BC%89,-CV%3A%E7%94%B0%E4%B8%AD%E5%B0%8F%E9%9B%AA",
@@ -120,10 +136,10 @@ export default () => {
     ずんだもん: {
       name: "ずんだもん",
       rubyName: "ずんだもん",
-      bustupImage: queryPortraits.bustup.nodes.find(
+      bustupImage: query.bustup.nodes.find(
         node => node.name === "bustup-zundamon"
       )!.childImageSharp.gatsbyImageData,
-      portraitImage: queryPortraits.portrait.nodes.find(
+      portraitImage: query.portrait.nodes.find(
         node => node.name === "portrait-zundamon"
       )!.childImageSharp.gatsbyImageData,
       color: "#33A65E",
@@ -138,19 +154,22 @@ export default () => {
         },
         { label: "将来の夢", value: "ずんだ餅のさらなる普及", size: 2 },
       ],
-      voiceUrls: [zundamon001, zundamon002, zundamon003, zundamon004],
-      infoImages: queryPortraits.dormitory.nodes
+      voiceUrls: [zundamon01, zundamon02, zundamon03, zundamon04],
+      infoImages: query.dormitory.nodes
         .filter(node => node.name.includes("zundamon"))
         .sort((a, b) => a.name.localeCompare(b.name))
         .map(node => node.childImageSharp.gatsbyImageData),
       callNames: {
         四国めたん: "めたん",
-        ずんだもん: undefined,
         春日部つむぎ: "つむぎ",
         雨晴はう: "はう",
         波音リツ: "リツ",
-        me: "ずんだもん<br />僕",
-        you: "オマエ<br />みんな",
+        玄野武宏: "たけひろ",
+        白上虎太郎: "こたろう",
+        青山龍星: "りゅうせい",
+        冥鳴ひまり: "ひまり",
+        me: ["ずんだもん", "僕"],
+        you: ["オマエ", "みんな"],
       },
       detailUrl:
         "https://zunko.jp/con_voice.html#:~:text=%E3%81%AF%E3%81%93%E3%81%A1%E3%82%89%5Bsm31259177%5D-,%E3%81%9A%E3%82%93%E3%81%A0%E3%82%82%E3%82%93,-CV%3A%E4%BC%8A%E8%97%A4%E3%82%86",
@@ -159,10 +178,10 @@ export default () => {
     春日部つむぎ: {
       name: "春日部つむぎ",
       rubyName: "春日部<rp>(</rp><rt>かすかべ</rt><rp>)</rp>つむぎ",
-      bustupImage: queryPortraits.bustup.nodes.find(
+      bustupImage: query.bustup.nodes.find(
         node => node.name === "bustup-tsumugi"
       )!.childImageSharp.gatsbyImageData,
-      portraitImage: queryPortraits.portrait.nodes.find(
+      portraitImage: query.portrait.nodes.find(
         node => node.name === "portrait-tsumugi"
       )!.childImageSharp.gatsbyImageData,
       color: "#FF9914",
@@ -177,15 +196,18 @@ export default () => {
         { label: "ﾁｬｰﾑﾎﾟｲﾝﾄ", value: "目元のほくろ", size: 2 },
         { label: "趣味", value: "動画配信サイトの巡回", size: 2 },
       ],
-      voiceUrls: [tsumugi001, tsumugi002, tsumugi003, tsumugi004],
+      voiceUrls: [tsumugi01, tsumugi02, tsumugi03, tsumugi04],
       callNames: {
         四国めたん: "めたん先輩",
         ずんだもん: "ずんだもん先輩",
-        春日部つむぎ: undefined,
         雨晴はう: "はうちゃん",
         波音リツ: "りっちゃん",
-        me: "あーし",
-        you: "きみ<br />きみたち",
+        玄野武宏: "武宏くん",
+        白上虎太郎: "虎太郎くん",
+        青山龍星: "龍星くん",
+        冥鳴ひまり: "ひまっち",
+        me: ["あーし"],
+        you: ["きみ", "きみたち"],
       },
       detailUrl: "https://tsukushinyoki10.wixsite.com/ktsumugiofficial",
     },
@@ -193,10 +215,9 @@ export default () => {
     雨晴はう: {
       name: "雨晴はう",
       rubyName: "雨晴<rp>(</rp><rt>あめはれ</rt><rp>)</rp>はう",
-      bustupImage: queryPortraits.bustup.nodes.find(
-        node => node.name === "bustup-hau"
-      )!.childImageSharp.gatsbyImageData,
-      portraitImage: queryPortraits.portrait.nodes.find(
+      bustupImage: query.bustup.nodes.find(node => node.name === "bustup-hau")!
+        .childImageSharp.gatsbyImageData,
+      portraitImage: query.portrait.nodes.find(
         node => node.name === "portrait-hau"
       )!.childImageSharp.gatsbyImageData,
       color: "#1D86AE",
@@ -206,19 +227,22 @@ export default () => {
         { label: "誕生日", value: "10月30日", size: 1 },
         { label: "身長", value: "152 cm", size: 1 },
         { label: "色", value: "#28c4ec", size: 1 },
-        { label: "CV", value: "？？？", size: 1 },
+        { label: "CV", value: "結崎このみ", size: 1 },
         { label: "好きなもの", value: "ラーメン", size: 2 },
         { label: "趣味", value: "食べ歩き", size: 2 },
       ],
-      voiceUrls: [hau001, hau002, hau003, hau004],
+      voiceUrls: [hau01, hau02, hau03, hau04],
       callNames: {
         四国めたん: "めたんさん",
         ずんだもん: "ずんだもん",
         春日部つむぎ: "つむぎさん",
-        雨晴はう: undefined,
         波音リツ: "リツさん",
-        me: "僕",
-        you: "あなた<br />あなた達",
+        玄野武宏: "玄野さん",
+        白上虎太郎: "白上さん",
+        青山龍星: "青山さん",
+        冥鳴ひまり: "ひまりさん",
+        me: ["僕"],
+        you: ["あなた", "あなた達"],
       },
       detailUrl: "https://amehau.com/",
     },
@@ -226,10 +250,10 @@ export default () => {
     波音リツ: {
       name: "波音リツ",
       rubyName: "波音<rp>(</rp><rt>なみね</rt><rp>)</rp>リツ",
-      bustupImage: queryPortraits.bustup.nodes.find(
+      bustupImage: query.bustup.nodes.find(
         node => node.name === "bustup-ritsu"
       )!.childImageSharp.gatsbyImageData,
-      portraitImage: queryPortraits.portrait.nodes.find(
+      portraitImage: query.portrait.nodes.find(
         node => node.name === "portrait-ritsu"
       )!.childImageSharp.gatsbyImageData,
       color: "#FC4E32",
@@ -242,19 +266,187 @@ export default () => {
         { label: "体重", value: "25 トン", size: 2 },
         { label: "好きなもの", value: "チョコクリスピー", size: 2 },
       ],
-      voiceUrls: [ritsu001, ritsu002, ritsu003, ritsu004, ritsu005],
+      voiceUrls: [ritsu01, ritsu02, ritsu03, ritsu04, ritsu05],
       callNames: {
         四国めたん: "めたん",
         ずんだもん: "ずんだもん",
         春日部つむぎ: "つむぎ",
         雨晴はう: "はう",
-        波音リツ: undefined,
-        me: "あたし",
-        you: "アンタ<br />アンタら",
+        玄野武宏: "くろの",
+        白上虎太郎: "こたろう",
+        青山龍星: "りゅうせい",
+        冥鳴ひまり: "ひまり",
+        me: ["あたし"],
+        you: ["アンタ", "アンタら"],
       },
       detailUrl: "http://www.canon-voice.com/ritsu.html",
     },
+
+    玄野武宏: {
+      name: "玄野武宏",
+      rubyName:
+        "玄野<rp>(</rp><rt>くろの</rt><rp>)</rp>武宏<rp>(</rp><rt>たけひろ</rt><rp>)</rp>",
+      bustupImage: query.bustup.nodes.find(
+        node => node.name === "bustup-takehiro"
+      )!.childImageSharp.gatsbyImageData,
+      portraitImage: query.portrait.nodes.find(
+        node => node.name === "portrait-takehiro"
+      )!.childImageSharp.gatsbyImageData,
+      color: "#1AA18E",
+      lightColor: "#B3E2D8",
+      description: "サッパリした青年<br />やや短気だが面倒見は良い",
+      labelInfos: [
+        { label: "身長", value: "177 cm", size: 2 },
+        { label: "体重", value: "66 Kg", size: 2 },
+        { label: "年齢", value: "20代前後", size: 2 },
+        { label: "誕生日", value: "12月24日", size: 2 },
+      ],
+      voiceUrls: [takehiro01, takehiro02, takehiro03],
+      callNames: {
+        四国めたん: "めたん",
+        ずんだもん: "ずんだもん",
+        春日部つむぎ: "つむぎ",
+        雨晴はう: "はう",
+        波音リツ: "リツ",
+        白上虎太郎: "虎太郎",
+        青山龍星: "龍星",
+        冥鳴ひまり: "ひまり",
+        me: ["俺"],
+        you: ["お前", "お前ら"],
+      },
+      detailUrl: "https://virvoxproject.wixsite.com/official",
+    },
+
+    白上虎太郎: {
+      name: "白上虎太郎",
+      rubyName:
+        "白上<rp>(</rp><rt>しらかみ</rt><rp>)</rp>虎太郎<rp>(</rp><rt>こたろう</rt><rp>)</rp>",
+      bustupImage: query.bustup.nodes.find(
+        node => node.name === "bustup-kotarou"
+      )!.childImageSharp.gatsbyImageData,
+      portraitImage: query.portrait.nodes.find(
+        node => node.name === "portrait-kotarou"
+      )!.childImageSharp.gatsbyImageData,
+      color: "#99D02B",
+      lightColor: "#E6F5B0",
+      description: "まっすぐで人懐っこい青年<br />愛嬌はあるものの少しおばか",
+      labelInfos: [
+        { label: "身長", value: "146 cm", size: 2 },
+        { label: "体重", value: "42 Kg", size: 2 },
+        { label: "年齢", value: "18 歳", size: 2 },
+        { label: "誕生日", value: "秋生まれ", size: 2 },
+      ],
+      voiceUrls: [kotarou01, kotarou02, kotarou03],
+      callNames: {
+        四国めたん: "めたんちゃん",
+        ずんだもん: "ずんずん",
+        春日部つむぎ: "つむぎちゃん",
+        雨晴はう: "はうさん",
+        波音リツ: "リツさん",
+        玄野武宏: "タケヒロ",
+        青山龍星: "リューセー",
+        冥鳴ひまり: "ひまりちゃん",
+        me: ["おれ"],
+        you: ["きみ", "きみ達"],
+      },
+      detailUrl: "https://virvoxproject.wixsite.com/official",
+    },
+
+    青山龍星: {
+      name: "青山龍星",
+      rubyName:
+        "青山<rp>(</rp><rt>あおやま</rt><rp>)</rp>龍星<rp>(</rp><rt>りゅうせい</rt><rp>)</rp>",
+      bustupImage: query.bustup.nodes.find(
+        node => node.name === "bustup-ryusei"
+      )!.childImageSharp.gatsbyImageData,
+      portraitImage: query.portrait.nodes.find(
+        node => node.name === "portrait-ryusei"
+      )!.childImageSharp.gatsbyImageData,
+      color: "#386CB0",
+      lightColor: "#B3CDE3",
+      description: "とにかく大柄で無骨な青年<br />寡黙で冷静なストッパー枠",
+      labelInfos: [
+        { label: "身長", value: "194 cm", size: 2 },
+        { label: "体重", value: "94 Kg", size: 2 },
+        { label: "年齢", value: "24 歳", size: 2 },
+        { label: "誕生日", value: "春生まれ", size: 2 },
+      ],
+      voiceUrls: [ryusei01, ryusei02, ryusei03],
+      callNames: {
+        四国めたん: "めたん",
+        ずんだもん: "ずんだもん",
+        春日部つむぎ: "つむぎ",
+        雨晴はう: "はう",
+        波音リツ: "リツ",
+        玄野武宏: "武宏",
+        白上虎太郎: "虎太郎",
+        冥鳴ひまり: "ひまり",
+        me: ["オレ"],
+        you: ["アンタ", "アンタ達", "お前達"],
+      },
+      detailUrl: "https://virvoxproject.wixsite.com/official",
+    },
+
+    冥鳴ひまり: {
+      name: "冥鳴ひまり",
+      rubyName: "冥鳴<rp>(</rp><rt>めいめい</rt><rp>)</rp>ひまり",
+      bustupImage: query.bustup.nodes.find(
+        node => node.name === "bustup-himari"
+      )!.childImageSharp.gatsbyImageData,
+      portraitImage: query.portrait.nodes.find(
+        node => node.name === "portrait-himari"
+      )!.childImageSharp.gatsbyImageData,
+      color: "#A45AAA",
+      lightColor: "#CAB2D6",
+      description: "冥界から来た死神<br />可愛いものに目がない",
+      labelInfos: [
+        { label: "年齢", value: "18 歳", size: 1 },
+        { label: "種族", value: "死神", size: 1 },
+        { label: "誕生日", value: "9月1日", size: 1 },
+        { label: "好きな日本語", value: "不渡り", size: 1 },
+        { label: "好きなもの", value: "可愛い女の子", size: 2 },
+        { label: "性格", value: "優しくて清楚（自称）", size: 2 },
+      ],
+      voiceUrls: [himari01, himari02, himari03, himari04, himari05],
+      callNames: {
+        四国めたん: "めたん先輩",
+        ずんだもん: "ずんだもん先輩",
+        春日部つむぎ: "つむぎ先輩",
+        雨晴はう: "はう先輩",
+        波音リツ: "リツ先輩",
+        玄野武宏: "武宏くん",
+        白上虎太郎: "虎太郎くん",
+        青山龍星: "龍星くん",
+        me: ["私"],
+        you: ["君たち"],
+      },
+      detailUrl: "https://kotoran8zunzun.wixsite.com/my-site/利用規約",
+    },
   }
+
+  const generationInfos: {
+    [key in Generation]: { characterKeys: CharacterKey[] }
+  } = {
+    一期生: { characterKeys: ["四国めたん", "ずんだもん"] },
+    二期生: {
+      characterKeys: ["春日部つむぎ", "雨晴はう", "波音リツ"],
+    },
+    三期生: {
+      characterKeys: ["玄野武宏", "白上虎太郎", "青山龍星", "冥鳴ひまり"],
+    },
+  }
+
+  // ボイボ寮デザイン用のヘッダーを超えたらホムペ用のヘッダーを表示する
+  const headerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!headerRef.current) return
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        setShowingHeader(!entry.isIntersecting)
+      })
+    })
+    observer.observe(headerRef.current)
+  }, [headerRef])
 
   const [showingCharacterModal, setShowingCharacterModal] = useState(false)
   const [selectedCharacterKey, setSelectedCharacterKey] =
@@ -277,8 +469,9 @@ export default () => {
         description="とある世界の不思議な建物、ボイボ寮。ここでは個性豊かな住民たちが暮らしています。"
         // image={shareThumb}
       />
+
       <div className="dormitory">
-        <header className="hero is-small">
+        <header ref={headerRef} className="hero is-small">
           <div className="hero-body">
             <div className="container has-text-centered">
               <h1 className="title is-2">ボイボ寮の住民たち</h1>
@@ -288,31 +481,52 @@ export default () => {
 
         <section className="section py-0">
           <div className="container is-max-desktop has-text-centered is-size-5 py-6">
-            とある世界の不思議な建物、ボイボ寮。
-            <br />
-            ここでは個性豊かな住民たちが暮らしています。
+            <p>とある世界の不思議な建物、ボイボ寮。</p>
+            <p>ここでは個性豊かな住民たちが暮らしています。</p>
           </div>
         </section>
 
         <main className="section py-0">
           <div className="container is-max-desktop pt-1 pb-6">
-            <div className="tile is-ancestor">
-              <div className="tile is-parent is-2">
-                <div className="tile is-child generation-label">
-                  <h2 className="title is-3">2 期 生</h2>
-                </div>
+            <div className="columns is-multiline">
+              <div className="column is-2 generation-label">
+                <h2 className="title is-3">3 期 生</h2>
+              </div>
+
+              <DormitoryCharacterCard
+                characterInfo={characterInfos.玄野武宏}
+                onClick={() => showCharacterModal("玄野武宏")}
+              />
+              <DormitoryCharacterCard
+                characterInfo={characterInfos.白上虎太郎}
+                onClick={() => showCharacterModal("白上虎太郎")}
+              />
+              <DormitoryCharacterCard
+                characterInfo={characterInfos.青山龍星}
+                onClick={() => showCharacterModal("青山龍星")}
+              />
+              <DormitoryCharacterCard
+                characterInfo={characterInfos.冥鳴ひまり}
+                onClick={() => showCharacterModal("冥鳴ひまり")}
+                className="is-offset-2"
+              />
+            </div>
+
+            <hr />
+
+            <div className="columns is-multiline">
+              <div className="column is-2 generation-label">
+                <h2 className="title is-3">2 期 生</h2>
               </div>
 
               <DormitoryCharacterCard
                 characterInfo={characterInfos.春日部つむぎ}
                 onClick={() => showCharacterModal("春日部つむぎ")}
               />
-
               <DormitoryCharacterCard
                 characterInfo={characterInfos.雨晴はう}
                 onClick={() => showCharacterModal("雨晴はう")}
               />
-
               <DormitoryCharacterCard
                 characterInfo={characterInfos.波音リツ}
                 onClick={() => showCharacterModal("波音リツ")}
@@ -321,12 +535,11 @@ export default () => {
 
             <hr />
 
-            <div className="tile is-ancestor">
-              <div className="tile is-parent is-2">
-                <div className="tile is-child generation-label">
-                  <h2 className="title is-3">1 期 生</h2>
-                </div>
+            <div className="columns is-multiline">
+              <div className="column is-2 generation-label">
+                <h2 className="title is-3">1 期 生</h2>
               </div>
+
               <DormitoryCharacterCard
                 characterInfo={characterInfos.四国めたん}
                 onClick={() => showCharacterModal("四国めたん")}
@@ -335,7 +548,8 @@ export default () => {
                 characterInfo={characterInfos.ずんだもん}
                 onClick={() => showCharacterModal("ずんだもん")}
               />
-              <div className="tile is-parent is-3 tohoku-tile">
+
+              <div className="tile is-parent is-3 tohoku">
                 <div className="tile is-child">
                   <h3 className="title is-4">仲良し</h3>
                   <a href="https://zunko.jp/" target="_blank" rel="noreferrer">
@@ -386,44 +600,16 @@ export default () => {
             <p className="is-size-6">
               商用・非商用問わず無料で、イントネーションの詳細な調整ができることが特徴です。
             </p>
-            <a
+            <Link
+              to={"/"}
               className="button is-align-self-center mt-5 is-primary is-rounded"
-              href="/"
+              type="button"
+              role={"button"}
             >
               <span className="has-text-weight-semibold">ダウンロード</span>
-            </a>
+            </Link>
           </div>
         </section>
-
-        <footer className="footer">
-          <div className="container is-flex is-justify-content-center">
-            <a
-              className="button is-outlined ml-1 mr-1"
-              href="https://github.com/VOICEVOX/voicevox"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="icon">
-                <FontAwesomeIcon icon={faGithub} />
-              </span>
-              <span>GitHub</span>
-            </a>
-            <a
-              className="button is-outlined is-info ml-1 mr-1"
-              href="https://twitter.com/hiho_karuta"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="icon">
-                <FontAwesomeIcon icon={faTwitter} />
-              </span>
-              <span>Twitter</span>
-            </a>
-          </div>
-          <div className="content has-text-centered mt-3">
-            <p>© 2021 Hiroshiba Kazuyuki</p>
-          </div>
-        </footer>
       </div>
       {selectedCharacterKey && (
         <DormitoryCharacterModal
@@ -432,8 +618,18 @@ export default () => {
           characterKey={selectedCharacterKey}
           characterKeys={characterKeys}
           characterInfos={characterInfos}
+          generationInfos={generationInfos}
         />
       )}
     </>
+  )
+}
+
+export default () => {
+  const [showingHeader, setShowingHeader] = useState(false)
+  return (
+    <Page showingHeader={showingHeader}>
+      <Dormitory setShowingHeader={setShowingHeader} />
+    </Page>
   )
 }
